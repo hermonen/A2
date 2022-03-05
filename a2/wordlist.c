@@ -3,7 +3,6 @@
 #include <string.h>
 #include "wordlist.h"
 
-
 /* Read the words from a filename and return a linked list of the words.
  *   - The newline character at the end of the line must be removed from
  *     the word stored in the node.
@@ -16,8 +15,46 @@
  *   - Do proper error checking of fopen, fclose, fgets
  */
 struct node *read_list(char *filename) {
-    // TODO - Remember to update return statement
-    return NULL;
+    FILE* fp = NULL;
+    char lineBuffer[MAXLINE];
+
+    struct node* head = NULL;
+    struct node* previousNode = head;
+
+    fp = fopen(filename, "r");
+
+    if (fp == NULL){
+      printf("could not open file: %s\n", filename);
+      return NULL;
+    }
+
+    while(fgets(lineBuffer, MAXLINE, fp) != NULL) {
+      // remove the newline
+      for(int i = 0; i < MAXLINE; i++){
+        if(lineBuffer[i] == '\n'){
+          lineBuffer[i] = '\0';
+        }
+      }
+      struct node* temp = (struct node*)malloc(sizeof(struct node));
+      strncpy(temp->word, lineBuffer, SIZE);
+      temp->next = NULL;
+
+      if (head == NULL) {
+        head = temp;
+      }
+
+      if (previousNode != NULL){
+        previousNode->next = temp;
+      }
+
+      previousNode = temp;
+    }
+
+    if (fclose(fp) != 0){
+      printf("could not close file: %s\n", filename);
+    }
+
+    return head;
 }
 
 /* Print the words in the linked-list list one per line
@@ -25,9 +62,15 @@ struct node *read_list(char *filename) {
 void print_dictionary(struct node *list) {
     // TODO
 }
-/* Free all of the dynamically allocated memory in the dictionary list 
+/* Free all of the dynamically allocated memory in the dictionary list
  */
 void free_dictionary(struct node *list) {
-    // TODO
-}
 
+  struct node *freeptr = list;
+
+  while(freeptr != NULL) {
+      struct node *tempFree = freeptr->next;
+      free(freeptr);
+      freeptr = tempFree;
+  }
+}

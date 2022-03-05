@@ -6,7 +6,7 @@
 
 /* A global variable to turn on or off extra print statements.
  * See example in solve_subtree
- * 
+ *
  * You are welcome to add your own output that is printed if verbose is 1.
  * This output should be help the reader of your program understand it.
  */
@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
         if((fp = fopen(argv[optind], "r")) == NULL) {
             perror("fopen");
             exit(1);
-        }      
+        }
     }
 
     // 1. Get the list of words
@@ -59,6 +59,8 @@ int main(int argc, char **argv) {
     print_paths(word_tree, path, 1, w->num_rows);
 
     // 6. free all dynamically allocated memory
-    // TODO - use the functions in the associated files.
+    free_tree(word_tree);
+    free_wordle(w);
+    free_dictionary(dict);
     return 0;
 }
